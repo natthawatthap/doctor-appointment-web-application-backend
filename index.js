@@ -13,8 +13,11 @@ app.use(bodyParser.json());
 const authRoutes = require("./src/routes/auth.routes");
 app.use("/api/auth", authRoutes);
 
-const bookingRoutes = require("./src/routes/appointment.routes");
-app.use("/api/appointment", bookingRoutes);
+const scheduleRoutes = require("./src/routes/schedule.routes");
+app.use("/api/schedule", scheduleRoutes);
+
+const appointmentRoutes = require("./src/routes/appointment.routes");
+app.use("/api/appointment", appointmentRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

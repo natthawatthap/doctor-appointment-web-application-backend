@@ -2,13 +2,22 @@ const { DataTypes } = require("sequelize");
 const db = require("../db/db");
 
 //const Patient = require('./Patient'); // Import Patient model
-const Organization = require("./organization.model"); // Import Organization model
+//const Organization = require("./organization.model"); // Import Organization model
+const User = require("./user.model");
 
 const Appointment = db.define("Appointment", {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
+  },
+  userId: {
+    type: DataTypes.UUID,
+    allowNull: false,
+    references: {
+      model: User,
+      key: 'id',
+    },
   },
   date: {
     type: DataTypes.DATEONLY,
@@ -24,14 +33,7 @@ const Appointment = db.define("Appointment", {
   },
   location: DataTypes.STRING,
   specialty: DataTypes.STRING,
-  organizationId: {
-    type: DataTypes.UUID,
-    allowNull: false,
-    references: {
-      model: Organization, // Reference to the Organization model
-      key: "id",
-    },
-  },
-});
+ 
+}); 
 
 module.exports = Appointment;

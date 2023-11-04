@@ -22,14 +22,7 @@ const User = db.define('User', {
     type: DataTypes.ENUM('admin', 'doctor', 'patient', 'patient navigator'),
     allowNull: false,
   },
-  // organizationId: {
-  //   type: DataTypes.UUID,
-  //   allowNull: false,
-  //   references: {
-  //     model: Organization,
-  //     key: 'id',
-  //   },
-  // },
+
 });
 
 module.exports = User;
