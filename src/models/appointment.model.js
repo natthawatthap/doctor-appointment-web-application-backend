@@ -1,8 +1,5 @@
 const { DataTypes } = require("sequelize");
 const db = require("../db/db");
-
-//const Patient = require('./Patient'); // Import Patient model
-//const Organization = require("./organization.model"); // Import Organization model
 const User = require("./user.model");
 
 const Appointment = db.define("Appointment", {
@@ -16,7 +13,7 @@ const Appointment = db.define("Appointment", {
     allowNull: false,
     references: {
       model: User,
-      key: 'id',
+      key: "id",
     },
   },
   date: {
@@ -33,7 +30,6 @@ const Appointment = db.define("Appointment", {
   },
   location: DataTypes.STRING,
   specialty: DataTypes.STRING,
- 
-}); 
+});
 
 module.exports = Appointment;

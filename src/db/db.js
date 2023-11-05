@@ -1,12 +1,13 @@
+require("dotenv").config();
 const { Sequelize } = require("sequelize");
 
 const db = new Sequelize(
-  "doctor_appointment_web_application_db",
-  "postgres",
-  "P@ssw0rd",
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
   {
-    host: "localhost",
-    dialect: "postgres",
+    host: process.env.DB_HOST,
+    dialect: process.env.DB_DIALECT,
   }
 );
 
@@ -18,7 +19,7 @@ db.authenticate()
     console.error("Unable to connect to the database:", err);
   });
 
-db.sync({ alter: true }) 
+db.sync({ alter: true })
   .then(() => {
     console.log("Database synced");
   })

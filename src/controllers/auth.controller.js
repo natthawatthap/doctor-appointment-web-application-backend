@@ -15,8 +15,8 @@ exports.signIn = async (req, res) => {
       if (user) {
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (passwordMatch) {
-          const token = jwt.sign({ userId: user.id }, "your_secret_key", {
-            expiresIn: "1h",
+          const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+            expiresIn: process.env.JWT_EXPIRES_IN,
           });
           res.status(200).json({ message: "Sign-in successful", token });
         } else {
@@ -42,7 +42,7 @@ exports.signUp = async (req, res) => {
     const newUser = await User.create({
       email,
       password: hashedPassword,
-      role: 'admin'
+      role: "admin",
     });
 
     res.status(201).json({ message: "Sign-up successful" });
