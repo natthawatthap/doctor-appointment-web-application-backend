@@ -36,17 +36,28 @@ exports.signIn = async (req, res) => {
 exports.signUp = async (req, res) => {
   const { email, password } = req.body;
 
-  if (email && password) {
-    const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+    const existingUser = await User.findOne({ where: { email } });
 
-    const newUser = await User.create({
-      email,
-      password: hashedPassword,
-      role: "admin",
-    });
+    if (existingUser) {
+      return res.status(409).json({ message: "Email already exists" });
+    }
 
-    res.status(201).json({ message: "Sign-up successful" });
-  } else {
-    res.status(400).json({ message: "Invalid request" });
+    if (email && password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const newUser = await User.create({
+        email,
+        password: hashedPassword,
+        role: "admin",
+      });
+
+      res.status(201).json({ message: "Sign-up successful" });
+    } else {
+      res.status(400).json({ message: "Invalid request" });
+    }
+  } catch (error) {
+    console.error("Error creating user:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

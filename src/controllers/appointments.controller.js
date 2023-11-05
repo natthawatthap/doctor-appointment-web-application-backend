@@ -1,6 +1,7 @@
 const Appointment = require("../models/appointment.model");
 const jwt = require("jsonwebtoken"); // Assuming you're using JWT for token-based authentication
 const Schedule = require("../models/schedule.model");
+const sequelize = require("../models/appointment.model").sequelize;
 
 exports.getAppointments = async (req, res) => {
   try {
@@ -31,6 +32,11 @@ exports.createAppointment = async (req, res) => {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
     const userId = decodedToken.userId;
+
+    const appointmentCount = await countAppointmentsForUser(userId);
+    if (appointmentCount >= 24) {
+      return res.status(400).json({ message: "User has reached the maximum appointment limit" });
+    }
 
     const doctorInfo = await getDoctorName(specialty, date, time);
 
@@ -76,5 +82,30 @@ const getDoctorName = async (specialty, date, time) => {
   } catch (error) {
     console.error("Error fetching doctor name:", error);
     throw new Error("Internal Server Error");
+  }
+};
+
+
+const countAppointmentsForUser = async (userId) => {
+  try {
+    const result = await Appointment.findAll({
+      attributes: [
+        'userId',
+        [sequelize.fn('COUNT', sequelize.col('id')), 'appointmentCount']
+      ],
+      where: {
+        userId: userId
+      },
+      group: ['userId']
+    });
+
+    if (result.length > 0) {
+      return result[0].dataValues.appointmentCount;
+    } else {
+      return 0;
+    }
+  } catch (error) {
+    console.error('Error counting appointments:', error);
+    throw new Error('Internal Server Error');
   }
 };
